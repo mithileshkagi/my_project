@@ -111,7 +111,7 @@ def create_rag_chain(retriever, llm):
 # --- Main Execution ---
 
 if __name__ == "__main__":
-    pdf_file_path = "example.pdf"  # Ensure this file exists or update with full path
+    pdf_file_path = "venv\budget_speech.pdf"  # Ensure this file exists or update with full path
 
     # Step 1: Load PDF
     documents = load_documents(pdf_file_path)
