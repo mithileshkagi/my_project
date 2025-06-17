@@ -1,3 +1,4 @@
+import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 def split_documents(documents):
@@ -23,3 +24,10 @@ def split_documents(documents):
 #     chunks = split_documents(documents)
 #     if chunks:
 #         print(f"First chunk content: {chunks[0].page_content[:200]}...")
+
+pdf_file_path = "budget_speech.pdf"
+if os.path.exists(pdf_file_path):
+    print("File found.")
+else:
+    print("File not found.")
+
