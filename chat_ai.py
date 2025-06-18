@@ -14,8 +14,8 @@ def create_llm() -> BaseChatModel:
         return None
 
 # Example usage:
-# llm = create_llm()
-# if llm:
-#     # test_response = llm.invoke("Hello, how are you?")
-#     # print(f"LLM test response: {test_response.content}")
-#     pass
+llm = create_llm()
+if llm:
+    test_response = llm.invoke("Hello, how are you?")
+    print(f"LLM test response: {test_response.content}")
+    pass

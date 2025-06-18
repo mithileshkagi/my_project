@@ -20,8 +20,8 @@ def create_vector_store(chunks, embeddings) -> VectorStore:
         print(f"Error creating vector store: {e}")
         return None
 
-# Example usage (assuming 'chunks' from Step 2 and 'embeddings_model' from Step 3):
+# # Example usage (assuming 'chunks' from Step 2 and 'embeddings_model' from Step 3):
 # if chunks and embeddings_model:
 #     vector_store = create_vector_store(chunks, embeddings_model)
-#     if vector_store:
-#         print("Vector store is ready.")
+    if vector_store:
+        print("Vector store is ready.")

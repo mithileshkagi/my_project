@@ -14,9 +14,9 @@ def create_embeddings() -> Embeddings:
         return None
 
 # Example usage:
-# embeddings_model = create_embeddings()
-# if embeddings_model:
-#     # You can test it by embedding a simple text
-#     # test_embedding = embeddings_model.embed_query("Hello world")
-#     # print(f"Test embedding length: {len(test_embedding)}")
-#     pass
+embeddings_model = create_embeddings()
+if embeddings_model:
+    # You can test it by embedding a simple text
+    # test_embedding = embeddings_model.embed_query("Hello world")
+    # print(f"Test embedding length: {len(test_embedding)}")
+    pass

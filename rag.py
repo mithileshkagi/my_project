@@ -1,6 +1,9 @@
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+# from langchain.vectorstores import FAISS
+# from langchain.embeddings import OpenAIEmbeddings
+
 
 def create_rag_chain(retriever, llm):
     """
@@ -46,5 +49,5 @@ def create_rag_chain(retriever, llm):
 #     if rag_chain:
 #         # You can test the chain
 #         # response = rag_chain.invoke("What is the capital of France?") # This will only use context if available
-#         # print(f"RAG chain test response: {response}")
+#         print(f"RAG chain test response: {response}")
 #         pass

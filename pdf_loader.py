@@ -25,6 +25,6 @@ def load_documents(file_path):
         return None
 
 # Example usage:
-# documents = load_documents(pdf_path)
-# if documents:
-#     print(f"First 100 characters of the first page: {documents[0].page_content[:100]}")
+documents = load_documents(pdf_path)
+if documents:
+    print(f"First 100 characters of the first page: {documents[0].page_content[:100]}")

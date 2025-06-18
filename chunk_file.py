@@ -1,33 +1,37 @@
-import os
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.docstore.document import Document
 
-def split_documents(documents):
-    """
-    Splits the loaded documents into smaller chunks for processing.
-    """
-    if not documents:
-        print("No documents to split.")
-        return []
+# Initialize variables first
+chunks = []  # ✅ Define chunks before use
+embeddings_model = None  # You must initialize this properly later
 
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,      # The maximum size of each chunk (in characters)
-        chunk_overlap=200,    # The number of characters to overlap between chunks
-        length_function=len,  # Function to calculate length (default is len)
-        is_separator_regex=False, # Whether the separators are regex or not
-    )
-    chunks = text_splitter.split_documents(documents)
-    print(f"Split documents into {len(chunks)} chunks.")
-    return chunks
+# Load documents
+try:
+    with open('sample.txt', 'r') as file:
+        text = file.read()
+        documents = [Document(page_content=doc) for doc in text.split('\n\n')]
+except FileNotFoundError:
+    print("Error: sample.txt not found.")
+    documents = []
 
-# Example usage (assuming 'documents' from Step 1):
-# if documents:
-#     chunks = split_documents(documents)
-#     if chunks:
-#         print(f"First chunk content: {chunks[0].page_content[:200]}...")
+# Split documents
+if documents:
+    def split_documents(documents):
+        splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1000,
+            chunk_overlap=200,
+            length_function=len,
+            is_separator_regex=False
+        )
+        return splitter.split_documents(documents)
 
-pdf_file_path = "budget_speech.pdf"
-if os.path.exists(pdf_file_path):
-    print("File found.")
+    chunks = split_documents(documents)
+
+# Dummy example (replace with your actual embedding model setup)
+embeddings_model = "some_model_instance"
+
+# ✅ Safe to use this check now
+if chunks and embeddings_model:
+    print("Proceeding with vector store creation...")
 else:
-    print("File not found.")
-
+    print("Chunks or embedding model not available.")

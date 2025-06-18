@@ -1,7 +1,5 @@
 import os
-import shutil
 from dotenv import load_dotenv
-
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
@@ -10,22 +8,11 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
 
-# --- Load environment and set API key ---
-# load_dotenv()
-# os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
-load_dotenv()
-api_key = os.getenv("GOOGLE_API_KEY")
-
-if not api_key:
-    raise EnvironmentError("GOOGLE_API_KEY AIzaSyBqKB5t2cJ5t7nJTSZkfF1ZQo6J5awqlzQ")
-
-os.environ["GOOGLE_API_KEY"] = api_key
-
-# --- Re-define functions ---
+# --- Re-define functions for a single executable block ---
 
 def load_documents(file_path):
     try:
-        loader = PyPDFLoader(file_path)
+        loader = PyPDFLoader(r"C:\INTERN\data\budget_speech.pdf")
         documents = loader.load()
         print(f"Loaded {len(documents)} pages from {file_path}")
         return documents
@@ -108,30 +95,34 @@ def create_rag_chain(retriever, llm):
     print("RAG chain created.")
     return rag_chain
 
-# --- Main Execution ---
+# --- Main Chatbot Logic ---
 
 if __name__ == "__main__":
-    pdf_file_path = "venv\budget_speech.pdf"  # Ensure this file exists or update with full path
+    load_dotenv() # Ensure .env is loaded at the start
 
-    # Step 1: Load PDF
+    pdf_file_path = "example.pdf" # Make sure this PDF exists in your directory!
+                                 # Or provide a full path: "/path/to/your/example.pdf"
+
+    # Step 1: Load documents
     documents = load_documents(pdf_file_path)
     if not documents:
         print("Exiting: Could not load documents.")
         exit()
 
-    # Step 2: Split into chunks
+    # Step 2: Split documents
     chunks = split_documents(documents)
     if not chunks:
         print("Exiting: Could not split documents.")
         exit()
 
-    # Step 3: Initialize embeddings
+    # Step 3: Create embeddings
     embeddings_model = create_embeddings()
     if not embeddings_model:
         print("Exiting: Could not initialize embeddings model.")
         exit()
 
-    # Step 4: Load or create vector store
+    # Step 4: Create vector store (or load if already persisted)
+    # Check if a persisted ChromaDB exists to avoid re-embedding every time
     if os.path.exists("./chroma_db"):
         print("Loading existing vector store...")
         try:
@@ -139,7 +130,6 @@ if __name__ == "__main__":
             print("Vector store loaded from disk.")
         except Exception as e:
             print(f"Error loading existing vector store, re-creating: {e}")
-            shutil.rmtree("./chroma_db")
             vector_store = create_vector_store(chunks, embeddings_model)
     else:
         print("Creating new vector store...")
@@ -155,24 +145,23 @@ if __name__ == "__main__":
         print("Exiting: Could not create retriever.")
         exit()
 
-    # Step 6: Initialize LLM
+    # Step 6: Create LLM
     llm = create_llm()
     if not llm:
         print("Exiting: Could not initialize LLM.")
         exit()
 
-    # Step 7: Create RAG pipeline
+    # Step 7: Create RAG chain
     rag_chain = create_rag_chain(retriever, llm)
     if not rag_chain:
         print("Exiting: Could not create RAG chain.")
         exit()
 
-    print("\n✅ PDF Chatbot is ready! Ask questions based on the PDF.")
-    print("Type 'exit' to quit.\n")
+    print("\nPDF Chatbot is ready! Ask your questions about the document.")
+    print("Type 'exit' to quit.")
 
-    # --- Chat Loop ---
     while True:
-        user_query = input("Your question: ")
+        user_query = input("\nYour question: ")
         if user_query.lower() == 'exit':
             print("Exiting chatbot. Goodbye!")
             break
@@ -180,7 +169,7 @@ if __name__ == "__main__":
         if user_query.strip():
             try:
                 response = rag_chain.invoke(user_query)
-                print(f"\nChatbot: {response}\n")
+                print(f"Chatbot: {response}")
             except Exception as e:
                 print(f"An error occurred during response generation: {e}")
         else:
